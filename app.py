@@ -1,11 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="NFE-Agro", layout="wide")
 
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
+col1, col2, col3 = st.columns(3)
 
 url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSm1RPdkTOOGv0LyZme-uF6toj56tKZgWfzQza6E11tAFkZY46c2J3YFSjkQXmy9ub5CHTGxKvSx6OO/pub?gid=0&single=true&output=csv'
 
@@ -22,7 +23,8 @@ df = load_data()
 
 # -------------------------------------------------------------------
 
-ano = st.selectbox("Ano", [2025,2024,2023])
+with card5:
+    ano = st.selectbox("Ano", [2025,2024])
 
 df_filtered = df.query('Ano ==@ano')
 
@@ -30,10 +32,15 @@ df_filtered = df.query('Ano ==@ano')
 
 
 df_filtered
+
+
 # -------------------------------------------------------------------
 
 total_entrada = df_filtered.loc[df['Tipo'] == 'Entrada', 'Valor'].sum()
 qtd_entradas = df_filtered.loc[df_filtered['Tipo'] == 'Entrada', 'Valor'].count()
+
+total_saidas = df_filtered.loc[df['Tipo'] == 'Saída', 'Valor'].sum()
+qtd_saidas = df_filtered.loc[df_filtered['Tipo'] == 'Saída', 'Valor'].count()
 
 
 with card1:
@@ -42,15 +49,74 @@ with card1:
 with card2:
     st.metric("QTD Entradas", qtd_entradas)
 
-    
+with card3:
+    st.metric("Total Saídas",f'💵 R$ {total_saidas:,.0f}'.replace(',', 'X').replace('.', ',').replace('X', '.'))
+
+with card4:
+    st.metric("QTD Saídas", qtd_saidas)
+
 # -------------------------------------------------------------------
 
 df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
-
 pie_chart = px.pie(df_pie,names="Tipo", values="Valor")
+
+
+df_centro_de_custo = df_filtered.groupby('Centro de Custo')['Valor'].sum().reset_index()
+df_centro_de_custo = df_centro_de_custo.sort_values(by="Valor",ascending=True)
+bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",title= "Por Centro de Custo", orientation="h")
+
+df_categoria = df_filtered.groupby("Categoria")["Valor"].sum().reset_index()
+df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
+bar_categoria = px.bar(df_categoria, x="Valor", y="Categoria", 
+        text=df_categoria["Valor"].apply(lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")),
+        title="Por Categoria", orientation="h",color_discrete_sequence=["#016b7e"])
+bar_categoria.update_layout(
+    height=2200, 
+    margin=dict(l=60, r=20, t=40, b=20),
+    paper_bgcolor='rgba(0,0,0,0)',  # fundo do gráfico transparente
+    plot_bgcolor='rgba(0,0,0,0)',    # fundo da área do gráfico transparente
+     xaxis=dict(
+        title="Valor (R$)",
+        showgrid=False,
+        zeroline=False
+    ) 
+)
 
 # -------------------------------------------------------------------
 
+with col1:
+    st.plotly_chart(pie_chart, use_container_width=True)
 
-pie_chart
+with col2:
+    st.plotly_chart(bar_centro_de_custo, use_container_width=True)
 
+with col3:
+    # st.plotly_chart(bar_categoria, use_container_width=True)
+    bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn')
+    components.html(
+        f"""
+        <div style="height:400px; overflow-y:auto;">
+            {bar_html}
+        </div>
+        """,
+        height=420,
+    )
+
+#-----------------------------------------------------------------------------------------------------
+#estilizacao
+
+borda = """
+            <style>
+            [data-testid="stColumn"]
+            {
+            background-color: #000000;
+            border-radius: 15px;
+            padding: 10px;
+            text-align: center;
+            color: #ffffff;
+            opacity: 100%;
+            }
+            </style>
+            """
+
+st.markdown(borda, unsafe_allow_html=True)  
