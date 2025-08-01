@@ -60,26 +60,70 @@ with card4:
 df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
 pie_chart = px.pie(df_pie,names="Tipo", values="Valor")
 
-
+# BARRA CENTRO DE CUSTO
 df_centro_de_custo = df_filtered.groupby('Centro de Custo')['Valor'].sum().reset_index()
 df_centro_de_custo = df_centro_de_custo.sort_values(by="Valor",ascending=True)
-bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",title= "Por Centro de Custo", orientation="h")
+bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",
+                             title= "Por Centro de Custo", orientation="h",
+                             color_discrete_sequence=["#007b83"])
+bar_centro_de_custo.update_traces(text=df_centro_de_custo["Valor"].apply(
+        lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    ), textposition='outside', textfont=dict(color="white"))
+bar_centro_de_custo.update_layout(
+    height=400,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    title=dict(font=dict(size=18, color='white')),
+    xaxis=dict(visible=False),
+    yaxis=dict(color='white'),
+    showlegend=False
+)
 
 df_categoria = df_filtered.groupby("Categoria")["Valor"].sum().reset_index()
 df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
-bar_categoria = px.bar(df_categoria, x="Valor", y="Categoria", 
-        text=df_categoria["Valor"].apply(lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")),
-        title="Por Categoria", orientation="h",color_discrete_sequence=["#016b7e"])
+
+bar_categoria = px.bar(
+    df_categoria,
+    x="Valor",
+    y="Categoria",
+    text=df_categoria["Valor"].apply(
+        lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    ),
+    title="Por Categoria",
+    orientation="h",
+    color_discrete_sequence=["#016b7e"]  # cor única
+)
+
+bar_categoria.update_traces(
+    textposition='outside',
+    textfont=dict(color="white", size=12) 
+)
+
 bar_categoria.update_layout(
-    height=2200, 
-    margin=dict(l=60, r=20, t=40, b=20),
-    paper_bgcolor='rgba(0,0,0,0)',  # fundo do gráfico transparente
-    plot_bgcolor='rgba(0,0,0,0)',    # fundo da área do gráfico transparente
-     xaxis=dict(
+    height=2200,
+    margin=dict(l=110, r=10, t=40, b=40),
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    title=dict(
+        text="Por Categoria",
+        font=dict(size=18, color='white')  # título branco
+    ),
+    xaxis=dict(
+        visible=False,
         title="Valor (R$)",
         showgrid=False,
-        zeroline=False
-    ) 
+        zeroline=False,
+        color='white',
+        tickfont=dict(color='white')
+    ),
+    yaxis=dict(
+        title=" ",
+        showgrid=False,
+        automargin=False,
+        color='white',
+        tickfont=dict(color='white')
+    ),
+    showlegend=False
 )
 
 # -------------------------------------------------------------------
@@ -88,11 +132,11 @@ with col1:
     st.plotly_chart(pie_chart, use_container_width=True)
 
 with col2:
-    st.plotly_chart(bar_centro_de_custo, use_container_width=True)
+    st.plotly_chart(bar_centro_de_custo, use_container_width=True, config={'displayModeBar': False})
 
 with col3:
     # st.plotly_chart(bar_categoria, use_container_width=True)
-    bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn')
+    bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
     components.html(
         f"""
         <div style="height:400px; overflow-y:auto;">
