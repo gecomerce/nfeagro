@@ -113,15 +113,16 @@ bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",
 
 bar_centro_de_custo.update_traces(text=df_centro_de_custo["Valor"].apply(
         lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    ), textposition='outside', textfont=dict(color="white"))
+    ), textposition='auto', textfont=dict(color="white"))
 
 bar_centro_de_custo.update_layout(
     height=400,
+    margin=dict(l=110, r=10, t=100, b=40),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     title=dict(font=dict(size=18, color='white')),
     xaxis=dict(visible=False),
-    yaxis=dict(color='white'),
+    yaxis=dict(color='white', title=""),
     showlegend=False
 )
 
@@ -130,31 +131,22 @@ bar_centro_de_custo.update_layout(
 df_categoria = df_filtered.groupby("Categoria")["Valor"].sum().reset_index()
 df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
 
-bar_categoria = px.bar(
-    df_categoria,
-    x="Valor",
-    y="Categoria",
+bar_categoria = px.bar(df_categoria,x="Valor",y="Categoria",
     text=df_categoria["Valor"].apply(
-        lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
-    ),
-    title="Por Categoria",
-    orientation="h",
-    color_discrete_sequence=["#016b7e"]
-)
+    lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", "."))
+    ,title="Por Categoria",orientation="h",color_discrete_sequence=["#016b7e"])
 
 bar_categoria.update_traces(
-    textposition='outside',
+    textposition='auto',
     textfont=dict(color="white", size=12) 
 )
 
 bar_categoria.update_layout(
     height=2200,
-    margin=dict(l=110, r=10, t=40, b=40),
+    margin=dict(l=110, r=10, t=60, b=40),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
-    title=dict(
-        font=dict(size=18, color='white')
-    ),
+    title=dict(font=dict(size=18, color='white')),
     xaxis=dict(
         visible=False,
         title="Valor (R$)",
