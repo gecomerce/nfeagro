@@ -30,9 +30,7 @@ df_filtered = df.query('Ano ==@ano')
 
 # -------------------------------------------------------------------
 
-
 df_filtered
-
 
 # -------------------------------------------------------------------
 
@@ -106,7 +104,7 @@ bar_categoria.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     title=dict(
         text="Por Categoria",
-        font=dict(size=18, color='white')  # título branco
+        font=dict(size=18, color='white')
     ),
     xaxis=dict(
         visible=False,
