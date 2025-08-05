@@ -8,6 +8,7 @@ st.set_page_config(page_title="NFE-Agro", layout="wide")
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
 col1, col2, col3 = st.columns(3)
 card_colunas, = st.columns(1)
+card_dataframe, = st.columns(1)
 
 url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSm1RPdkTOOGv0LyZme-uF6toj56tKZgWfzQza6E11tAFkZY46c2J3YFSjkQXmy9ub5CHTGxKvSx6OO/pub?gid=0&single=true&output=csv'
 
@@ -46,9 +47,6 @@ with card5:
 
 df_filtered = df.query('Ano ==@ano')
 
-# -------------------------------------------------------------------
-
-df_filtered
 
 # -------------------------------------------------------------------
 
@@ -180,7 +178,7 @@ ordem_meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov"
 df_colunas["Mês"] = pd.Categorical(df_colunas["Mês"], categories=ordem_meses, ordered=True)
 df_colunas = df_colunas.sort_values("Mês")
 
-df_colunas
+
 
 bar_colunas = px.bar(
     df_colunas,
@@ -234,6 +232,8 @@ with col3:
 with card_colunas:
     st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False})
 
+with card_dataframe:
+    st.dataframe(df_filtered, use_container_width=True, hide_index=True)
 
 #-----------------------------------------------------------------------------------------------------
 #estilizacao
