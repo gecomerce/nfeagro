@@ -99,7 +99,7 @@ pie_chart.update_layout(
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     title=dict(font=dict(size=18, color='white')),
-    legend=dict(font=dict(color='white'))
+    legend=dict(visible= False)
 )
 
 
@@ -228,8 +228,10 @@ with card_colunas:
     st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False})
 
 with card_dataframe:
+    mes = st.selectbox("Mês", df_filtered["Mês"].unique())
+    df_filtered = df_filtered.query('Mês == @mes')
     df_filtered = df_filtered.drop(columns=["Mês","Ano"])
-    st.subheader("Movimentações",anchor= False)
+    st.subheader(f"Movimentações de {mes} de {ano}",anchor= False)
     st.dataframe(df_filtered, use_container_width=True, hide_index=True)
 
 #-----------------------------------------------------------------------------------------------------
