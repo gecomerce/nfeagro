@@ -7,6 +7,7 @@ st.set_page_config(page_title="NFE-Agro", layout="wide")
 
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
 col1, col2, col3 = st.columns(3)
+card_colunas, = st.columns(1)
 
 url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSm1RPdkTOOGv0LyZme-uF6toj56tKZgWfzQza6E11tAFkZY46c2J3YFSjkQXmy9ub5CHTGxKvSx6OO/pub?gid=0&single=true&output=csv'
 
@@ -17,9 +18,26 @@ def load_data():
     df['Data'] = pd.to_datetime(df['Vencimento'], format='%d/%m/%Y', errors='coerce')
     df["Ano"] = df['Data'].dt.year
     df["Mês"] = df['Data'].dt.month
+    df["Mês"] = df['Mês'].replace({
+    1:"Jan",
+    2:"Fev",
+    3:"Mar",
+    4:"Abr",
+    5:"Mai",
+    6:"Jun",
+    7:"Jul",
+    8:"Ago",
+    9:"Set",
+    10:"Out",
+    11:"Nov",
+    12:"Dez"
+    })
+    df = df.drop(columns=["Data"])
     return df
 
 df = load_data()
+
+
 
 # -------------------------------------------------------------------
 
@@ -55,8 +73,6 @@ with card4:
 
 # -------------------------------------------------------------------
 
-# df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
-# pie_chart = px.pie(df_pie,names="Tipo", values="Valor")
 
 df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
 
@@ -88,14 +104,17 @@ pie_chart.update_layout(
 
 # ----------------------------------------------------------------
 # BARRA CENTRO DE CUSTO
+
 df_centro_de_custo = df_filtered.groupby('Centro de Custo')['Valor'].sum().reset_index()
 df_centro_de_custo = df_centro_de_custo.sort_values(by="Valor",ascending=True)
 bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",
                              title= "Por Centro de Custo", orientation="h",
                              color_discrete_sequence=["#007b83"])
+
 bar_centro_de_custo.update_traces(text=df_centro_de_custo["Valor"].apply(
         lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
     ), textposition='outside', textfont=dict(color="white"))
+
 bar_centro_de_custo.update_layout(
     height=400,
     paper_bgcolor='rgba(0,0,0,0)',
@@ -105,6 +124,8 @@ bar_centro_de_custo.update_layout(
     yaxis=dict(color='white'),
     showlegend=False
 )
+
+# --------------------------------------------------------------------------
 
 df_categoria = df_filtered.groupby("Categoria")["Valor"].sum().reset_index()
 df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
@@ -118,7 +139,7 @@ bar_categoria = px.bar(
     ),
     title="Por Categoria",
     orientation="h",
-    color_discrete_sequence=["#016b7e"]  # cor única
+    color_discrete_sequence=["#016b7e"]
 )
 
 bar_categoria.update_traces(
@@ -132,7 +153,6 @@ bar_categoria.update_layout(
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     title=dict(
-        text="Por Categoria",
         font=dict(size=18, color='white')
     ),
     xaxis=dict(
@@ -155,15 +175,53 @@ bar_categoria.update_layout(
 
 # -------------------------------------------------------------------
 
+df_colunas = df_filtered.groupby(["Mês","Tipo"])["Valor"].sum().reset_index()
+ordem_meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]
+df_colunas["Mês"] = pd.Categorical(df_colunas["Mês"], categories=ordem_meses, ordered=True)
+df_colunas = df_colunas.sort_values("Mês")
+
+df_colunas
+
+bar_colunas = px.bar(
+    df_colunas,
+    x="Mês",
+    color= "Tipo",
+    y="Valor",barmode="group",
+    text=df_colunas["Valor"].apply(
+        lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    ),
+    title="Movimentação Mensal",
+    orientation="v",
+        color_discrete_map={
+        "Entrada": "#16a34a",
+        "Saída": "#dc2626" 
+    }
+)
+
+bar_colunas.update_layout(
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    title=dict(font=dict(size=18, color='white')),
+    xaxis=dict(visible=True),
+    yaxis=dict(visible=False),
+    showlegend=False
+)
+
+bar_colunas.update_traces(
+    textposition='outside'
+)
+
+
+# -------------------------------------------------------------------
+
 with col1:
-    st.plotly_chart(pie_chart, use_container_width=True)
+    st.plotly_chart(pie_chart, use_container_width=True, config={'displayModeBar': False})
 
 
 with col2:
     st.plotly_chart(bar_centro_de_custo, use_container_width=True, config={'displayModeBar': False})
 
 with col3:
-    # st.plotly_chart(bar_categoria, use_container_width=True)
     bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
     components.html(
         f"""
@@ -173,6 +231,9 @@ with col3:
         """,
         height=420,
     )
+with card_colunas:
+    st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False})
+
 
 #-----------------------------------------------------------------------------------------------------
 #estilizacao
