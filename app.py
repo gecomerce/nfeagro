@@ -233,6 +233,7 @@ with card_colunas:
     st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False})
 
 with card_dataframe:
+    df_filtered = df_filtered.drop(columns=["Mês","Ano"])
     st.dataframe(df_filtered, use_container_width=True, hide_index=True)
 
 #-----------------------------------------------------------------------------------------------------
