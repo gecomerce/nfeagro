@@ -234,6 +234,7 @@ with card_colunas:
 
 with card_dataframe:
     df_filtered = df_filtered.drop(columns=["Mês","Ano"])
+    st.subheader("Movimentações",anchor= False)
     st.dataframe(df_filtered, use_container_width=True, hide_index=True)
 
 #-----------------------------------------------------------------------------------------------------
