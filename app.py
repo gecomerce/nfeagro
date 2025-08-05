@@ -55,9 +55,38 @@ with card4:
 
 # -------------------------------------------------------------------
 
-df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
-pie_chart = px.pie(df_pie,names="Tipo", values="Valor")
+# df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
+# pie_chart = px.pie(df_pie,names="Tipo", values="Valor")
 
+df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
+
+pie_chart = px.pie(
+    df_pie,
+    names="Tipo",
+    values="Valor",
+    title="Por Tipo",
+    color="Tipo",
+    color_discrete_map={
+        "Entrada": "#16a34a",
+        "Saída": "#dc2626" 
+    }
+)
+
+pie_chart.update_traces(
+    textposition='inside',
+    textinfo='label+percent',
+    insidetextfont=dict(color='white', size=14)
+)
+pie_chart.update_layout(
+    height=400,
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)',
+    title=dict(font=dict(size=18, color='white')),
+    legend=dict(font=dict(color='white'))
+)
+
+
+# ----------------------------------------------------------------
 # BARRA CENTRO DE CUSTO
 df_centro_de_custo = df_filtered.groupby('Centro de Custo')['Valor'].sum().reset_index()
 df_centro_de_custo = df_centro_de_custo.sort_values(by="Valor",ascending=True)
@@ -128,6 +157,7 @@ bar_categoria.update_layout(
 
 with col1:
     st.plotly_chart(pie_chart, use_container_width=True)
+
 
 with col2:
     st.plotly_chart(bar_centro_de_custo, use_container_width=True, config={'displayModeBar': False})
