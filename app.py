@@ -5,8 +5,8 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="NFE-Agro", layout="wide")
 
-st.title("Visão Financeira",anchor= False)
 
+card_title, = st.columns(1)
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
 col1, col2, col3 = st.columns(3)
 card_colunas, = st.columns(1)
@@ -49,7 +49,8 @@ with card5:
 
 df_filtered = df.query('Ano ==@ano')
 
-
+with card_title:
+    st.title(f'Visão Financeira {ano} 💰',anchor= False)
 # -------------------------------------------------------------------
 
 total_entrada = df_filtered.loc[df['Tipo'] == 'Entrada', 'Valor'].sum()
