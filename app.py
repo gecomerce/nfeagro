@@ -50,7 +50,7 @@ with card5:
 df_filtered = df.query('Ano ==@ano')
 
 with card_title:
-    st.title(f'Visão Financeira {ano} 💰',anchor= False)
+    st.title(f'NFe-Agro Visão Financeira {ano} 💰',anchor= False)
 # -------------------------------------------------------------------
 
 total_entrada = df_filtered.loc[df['Tipo'] == 'Entrada', 'Valor'].sum()
@@ -231,7 +231,7 @@ with card_dataframe:
     mes = st.selectbox("Mês", df_filtered["Mês"].unique())
     df_filtered = df_filtered.query('Mês == @mes')
     df_filtered = df_filtered.drop(columns=["Mês","Ano"])
-    st.subheader(f" NFe-Agro Movimentações de {mes} de {ano}",anchor= False)
+    st.subheader(f"Movimentações de {mes} de {ano}",anchor= False)
     st.dataframe(df_filtered, use_container_width=True, hide_index=True)
 
 #-----------------------------------------------------------------------------------------------------
