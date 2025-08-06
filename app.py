@@ -208,14 +208,14 @@ bar_colunas.update_traces(
 # -------------------------------------------------------------------
 
 with col1:
-    st.plotly_chart(pie_chart, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(pie_chart, use_container_width=True, config={'displayModeBar': False, 'staticPlot': True})
 
 
 with col2:
-    st.plotly_chart(bar_centro_de_custo, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(bar_centro_de_custo, use_container_width=True, config={'displayModeBar': False, 'staticPlot': True})
 
 with col3:
-    bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False})
+    bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False, 'staticPlot': True})
     components.html(
         f"""
         <div style="height:400px; overflow-y:auto;">
