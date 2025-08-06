@@ -138,7 +138,7 @@ bar_categoria = px.bar(df_categoria,x="Valor",y="Categoria",
     ,title="Por Categoria",orientation="h",color_discrete_sequence=["#1351D8"])
 
 bar_categoria.update_traces(
-    textposition='outside',
+    textposition='auto',
     textfont=dict(color="white", size=12) 
 )
 
