@@ -129,8 +129,9 @@ bar_centro_de_custo.update_layout(
 
 # --------------------------------------------------------------------------
 
-df_categoria = df_filtered.groupby("Categoria")["Valor"].sum().reset_index()
+df_categoria = df_filtered.groupby(["Categoria", "Tipo"])["Valor"].sum().reset_index()
 df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
+
 
 bar_categoria = px.bar(df_categoria,x="Valor",y="Categoria",
     text=df_categoria["Valor"].apply(
@@ -224,6 +225,8 @@ with col3:
         """,
         height=420,
     )
+
+
 with card_colunas:
     st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False, 'staticPlot': True})
 
