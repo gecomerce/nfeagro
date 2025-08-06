@@ -144,7 +144,7 @@ bar_categoria.update_traces(
 
 bar_categoria.update_layout(
     height=2200,
-    margin=dict(l=100, t=60, b=40),
+    margin=dict(l=115, t=60, b=40),
     paper_bgcolor='rgba(0,0,0,0)',
     plot_bgcolor='rgba(0,0,0,0)',
     title=dict(font=dict(size=18, color='white')),
