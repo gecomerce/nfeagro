@@ -218,7 +218,7 @@ with col3:
     bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False, 'staticPlot': True})
     components.html(
         f"""
-        <div style="height:400px; width:500px; margin:0; padding:0; overflow-y:auto;">
+        <div style="height:400px; width:400px; margin:0; padding:0; overflow-y:auto;">
             {bar_html}
         </div>
         """,
