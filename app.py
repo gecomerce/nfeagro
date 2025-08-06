@@ -225,7 +225,7 @@ with col3:
         height=420,
     )
 with card_colunas:
-    st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False})
+    st.plotly_chart(bar_colunas, use_container_width=True, config={'displayModeBar': False, 'staticPlot': True})
 
 with card_dataframe:
     mes = st.selectbox("Mês", df_filtered["Mês"].unique())
