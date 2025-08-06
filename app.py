@@ -138,7 +138,7 @@ bar_categoria = px.bar(df_categoria,x="Valor",y="Categoria",
     ,title="Por Categoria",orientation="h",color_discrete_sequence=["#1351D8"])
 
 bar_categoria.update_traces(
-    textposition='auto',
+    textposition='outside',
     textfont=dict(color="white", size=12) 
 )
 
@@ -218,7 +218,7 @@ with col3:
     bar_html = bar_categoria.to_html(full_html=False, include_plotlyjs='cdn', config={'displayModeBar': False, 'staticPlot': True})
     components.html(
         f"""
-        <div style="height:400px; overflow-y:auto;">
+        <div style="height:400px; margin: 0, overflow-y:auto;">
             {bar_html}
         </div>
         """,
