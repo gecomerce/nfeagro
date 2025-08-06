@@ -110,7 +110,7 @@ df_centro_de_custo = df_filtered.groupby('Centro de Custo')['Valor'].sum().reset
 df_centro_de_custo = df_centro_de_custo.sort_values(by="Valor",ascending=True)
 bar_centro_de_custo = px.bar(df_centro_de_custo,x="Valor", y="Centro de Custo",
                              title= "Por Centro de Custo", orientation="h",
-                             color_discrete_sequence=["#007b83"])
+                             color_discrete_sequence=["#1351D8"])
 
 bar_centro_de_custo.update_traces(text=df_centro_de_custo["Valor"].apply(
         lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
@@ -135,7 +135,7 @@ df_categoria = df_categoria.sort_values(by="Valor", ascending=True)
 bar_categoria = px.bar(df_categoria,x="Valor",y="Categoria",
     text=df_categoria["Valor"].apply(
     lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", "."))
-    ,title="Por Categoria",orientation="h",color_discrete_sequence=["#016b7e"])
+    ,title="Por Categoria",orientation="h",color_discrete_sequence=["#1351D8"])
 
 bar_categoria.update_traces(
     textposition='auto',
