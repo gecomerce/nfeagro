@@ -9,10 +9,47 @@ st.set_page_config(page_title="NFE-Agro", layout="wide")
 card_title, = st.columns(1)
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
 col1, col2, col3 = st.columns(3)
+card_contas, = st.columns(1)
 card_colunas, = st.columns(1)
 card_dataframe, = st.columns(1)
 
 url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSm1RPdkTOOGv0LyZme-uF6toj56tKZgWfzQza6E11tAFkZY46c2J3YFSjkQXmy9ub5CHTGxKvSx6OO/pub?gid=0&single=true&output=csv'
+url_contas = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSm1RPdkTOOGv0LyZme-uF6toj56tKZgWfzQza6E11tAFkZY46c2J3YFSjkQXmy9ub5CHTGxKvSx6OO/pub?gid=1020385303&single=true&output=csv'
+
+df_contas = pd.read_csv(url_contas)
+
+df_contas = df_contas[["Conta","Saldo"]]
+
+
+
+
+df_contas = df_contas.drop_duplicates(subset='Conta', keep='last')
+
+df_contas['Saldo'] = df_contas['Saldo'].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
+
+# -------------------------------------------------------------------------
+
+df_excluir_contas = ['323516106 GE','36392489-2 VMV','850764-3','42912-0 PF','3681-1 PJ','5838-7 GE B']
+
+df_contas_investimento = df_contas[~df_contas['Conta'].isin(df_excluir_contas)]
+
+# --------------------------------------------------------------------------
+
+df_excluir_contas_investimento = ['COMMEL','NEO IN','C6 CARTÃO INVESTIMENTO']
+
+df_contas = df_contas[~df_contas['Conta'].isin(df_excluir_contas_investimento)]
+
+
+with card_contas:
+    st.subheader("Saldo Contas",anchor=False)
+    carda, = st.columns(1)
+    with carda:
+        st.subheader("Contas", anchor=False)
+        st.dataframe(df_contas, hide_index= True)
+        st.subheader("Investimentos", anchor=False)
+        st.dataframe(df_contas_investimento, hide_index= True)
+
+
 
 @st.cache_data
 def load_data():
