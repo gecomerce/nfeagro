@@ -21,8 +21,6 @@ df_contas = pd.read_csv(url_contas)
 df_contas = df_contas[["Conta","Saldo"]]
 
 
-
-
 df_contas = df_contas.drop_duplicates(subset='Conta', keep='last')
 
 df_contas['Saldo'] = df_contas['Saldo'].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
@@ -49,7 +47,7 @@ with card_contas:
         st.subheader("Investimentos", anchor=False)
         st.dataframe(df_contas_investimento, hide_index= True)
 
-
+# --------------------------------------------------------------------------
 
 @st.cache_data
 def load_data():
@@ -212,9 +210,25 @@ df_colunas["Mês"] = pd.Categorical(df_colunas["Mês"], categories=ordem_meses, 
 df_colunas = df_colunas.sort_values("Mês")
 
 
+df_colunas_acc = df_filtered.sort_values(by=["Tipo", "Mês"])
+df_colunas_acc = df_colunas_acc.groupby(["Mês", "Tipo"])["Valor"].sum().groupby(level=1).cumsum().reset_index(name="Valor")
+
+opcoes = {
+    "Mensal": df_colunas,
+    "Acumulado": df_colunas_acc
+}
+
+with card_colunas:
+    escolha = st.selectbox("Selecione o tipo de valor", list(opcoes.keys()))
+    
+df_bar = opcoes[escolha]
+
+
+
 
 bar_colunas = px.bar(
-    df_colunas,
+    # df_colunas,
+    df_bar,
     x="Mês",
     color= "Tipo",
     y="Valor",barmode="group",
