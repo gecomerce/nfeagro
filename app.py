@@ -218,16 +218,14 @@ opcoes = {
     "Acumulado": df_colunas_acc
 }
 
+
 with card_colunas:
-    escolha = st.selectbox("Selecione o tipo de valor", list(opcoes.keys()))
-    
+    escolha = st.selectbox("", list(opcoes.keys()))
+
 df_bar = opcoes[escolha]
 
 
-
-
 bar_colunas = px.bar(
-    # df_colunas,
     df_bar,
     x="Mês",
     color= "Tipo",
@@ -235,7 +233,7 @@ bar_colunas = px.bar(
     text=df_colunas["Valor"].apply(
         lambda v: f"R$ {v:,.0f}".replace(",", "X").replace(".", ",").replace("X", ".")
     ),
-    title="Movimentação Mensal",
+    title= f'Movimentação {escolha} de {ano}',
     orientation="v",
         color_discrete_map={
         "Entrada": "#16a34a",
