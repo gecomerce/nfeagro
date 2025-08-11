@@ -20,7 +20,6 @@ df_contas = pd.read_csv(url_contas)
 
 df_contas = df_contas[["Conta","Saldo"]]
 
-
 df_contas = df_contas.drop_duplicates(subset='Conta', keep='last')
 
 df_contas['Saldo'] = df_contas['Saldo'].apply(lambda x: f"R$ {x:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."))
@@ -107,7 +106,6 @@ with card4:
 
 # -------------------------------------------------------------------
 
-
 df_pie = df_filtered.groupby('Tipo')['Valor'].sum().reset_index()
 
 pie_chart = px.pie(
@@ -134,7 +132,6 @@ pie_chart.update_layout(
     title=dict(font=dict(size=18, color='white')),
     legend=dict(visible= False)
 )
-
 
 # ----------------------------------------------------------------
 # BARRA CENTRO DE CUSTO
