@@ -6,7 +6,6 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="NFE-Agro", layout="wide")
 
-
 card_title, = st.columns(1)
 card1, card2, card3, card4, card5 = st.columns([1,1,1,1,0.5])
 col1, col2, col3 = st.columns(3)
@@ -75,8 +74,6 @@ def load_data():
     return df
 
 df = load_data()
-
-
 
 # -------------------------------------------------------------------
 
